@@ -20,6 +20,8 @@ public function getAll(array $fields)
     // query optimization
 }
 
+
+// 
 public function getById(int $id, array $fields)
 {
     return Specialist::select($fields)
