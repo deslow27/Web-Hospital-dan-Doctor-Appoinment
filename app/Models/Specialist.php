@@ -11,6 +11,7 @@ class Specialist extends Model
     //
     use SoftDeletes;
 
+    
 protected $fillable = [
     'name',
     'photo',
