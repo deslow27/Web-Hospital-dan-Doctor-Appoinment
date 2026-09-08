@@ -78,6 +78,7 @@ class DoctorService
     {
         $doctor = $this->doctorRepository->getById($id, ['*']);
 
+        
         if ($doctor->photo) {
             $this->deletePhoto($doctor->photo);
         }
@@ -97,4 +98,42 @@ class DoctorService
             Storage::disk('public')->delete($relativePath);
         }
     }
+
+    public function filterBySpecialistAndHospital(int $hospitalId, int $specialistId)
+    {
+    return $this->doctorRepository->filterBySpecialistAndHospital($hospitalId, $specialistId);
+    }
+
+    public function getAvailableSlots(int $doctorId) // 11
+{
+    $doctor = $this->doctorRepository->getById($doctorId, ['id']);
+
+    $dates = collect([
+        now()->addDays(1)->startOfDay(), // 21 apr
+        now()->addDays(2)->startOfDay(), // 22
+        now()->addDays(3)->startOfDay(), // 23
+    ]);
+
+    $timeSlots = ['10:30', '11:30', '13:30', '14:30', '15:30', '16:30'];
+
+    $availability = [];
+
+    foreach ($dates as $date) {
+        $dateStr = $date->toDateString();
+        $availability[$dateStr] = [];
+
+        foreach ($timeSlots as $time) {
+            $isTaken = $doctor->bookingTransactions()
+                ->whereDate('started_at', $dateStr)
+                ->whereTime('time_at', $time)
+                ->exists();
+
+                if (! $isTaken) {
+                    $availability[$dateStr][] = $time;
+        }
+    }
+}
+
+return $availability;
+}
 }
