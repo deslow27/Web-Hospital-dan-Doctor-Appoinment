@@ -38,12 +38,11 @@ public function bookingTransactions()
 }
 
 public function getPhotoAttribute($value){
-    if ($value){
+    if (!$value){
         return null; // No image available
     }
 
     return url(Storage::url($value));
-
 
     }
 }
