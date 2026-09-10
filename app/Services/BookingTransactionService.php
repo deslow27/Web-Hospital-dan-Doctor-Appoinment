@@ -78,6 +78,8 @@ $data['status'] = 'Waiting';
 if (isset($data['proof']) && $data['proof'] instanceof UploadedFile) {
     $data['proof'] = $this->uploadProof($data['proof']);
 }
+
+return $this->bookingTransactionRepository->create($data);
 }
 
 private function uploadProof(UploadedFile $file)
